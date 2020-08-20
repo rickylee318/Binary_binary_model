@@ -3,7 +3,7 @@ library(mvtnorm)
 alpha = 0.;
 gamma = 0.;
 beta = -1.;
-delta = 0.7;
+delta = 0.9;
 r = -0.7;
 N = 1000; # data number
 # Generate data
@@ -19,7 +19,10 @@ estimate <- function(gamma, delta, alpha, beta, s, N, r){
     uv = rmvnorm(N, mean=c(0,0), sigma=matrix(c(1,r,r,1), 2));
     u = uv[,1];
     v = uv[,2];
-    z = sample(c(-1,0,1), N, replace = TRUE);
+    p1 = runif(1);
+    p2 = runif(1,min=0,max = 1 - p1);
+    p3 = 1 - p1 - p2;
+    z = sample(c(-1,0,1), N, prob = c(p1, p2, p3),replace = TRUE);
     y2 = (-gamma - delta * z) < v;
     y2 = as.integer(y2);
     y1 = (-alpha - beta * y2) < u;
